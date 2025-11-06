@@ -10,4 +10,4 @@ export const conexion = await mysql.createConnection({
   database: process.env.DB_NAME || "prestamos_pymes"
 });
 
-console.log("✅ Conexión exitosa a la base de datos MySQL");
+console.log("Conexión exitosa a la base de datos MySQL");
