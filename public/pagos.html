@@ -109,43 +109,33 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const idPrestamo = params.get("idPrestamo");
-    const API_URL = `http://localhost:3000/api/pagos/${idPrestamo}`;
+  const API_URL = "http://localhost:3000/api/prestamos";
 
-    async function cargarPagos() {
-      try {
-        const res = await fetch(API_URL);
-        const pagos = await res.json();
+  async function cargarPrestamos() {
+    const res = await fetch(API_URL);
+    const prestamos = await res.json();
 
-        const tbody = document.querySelector("#tablaPagos tbody");
-        tbody.innerHTML = "";
+    console.log(prestamos); 
 
-        if (pagos.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="no-data">No hay pagos registrados para este préstamo</td></tr>`;
-          return;
-        }
+    const tbody = document.querySelector("#tablaPrestamos tbody");
+    tbody.innerHTML = "";
 
-        pagos.forEach(p => {
-          const fila = `
-            <tr>
-              <td>${p.idPago}</td>
-              <td>${p.fechaEmision || '-'}</td>
-              <td>${p.fechaVencimiento || '-'}</td>
-              <td>S/${Number(p.monto).toFixed(2)}</td>
-              <td>${p.estado || 'Sin estado'}</td>
-            </tr>
-          `;
-          tbody.innerHTML += fila;
-        });
-      } catch (error) {
-        console.error("Error al cargar pagos:", error);
-        document.querySelector("#tablaPagos tbody").innerHTML =
-          `<tr><td colspan="5" class="no-data">Error al cargar pagos</td></tr>`;
-      }
-    }
+    prestamos.forEach(p => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${p.idPrestamo}</td>
+          <td>${p.Nombre}</td>
+          <td>${p.montoAprobado}</td>
+          <td>${p.tasaInteres}</td>
+          <td>${p.plazo}</td>
+          <td>${p.fechaAprobacion}</td>
+          <td>${p.estado}</td>
+        </tr>`;
+    });
+  }
 
-    cargarPagos();
-  </script>
+  cargarPrestamos();
+</script>
+
 </body>
 </html>
