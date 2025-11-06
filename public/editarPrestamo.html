@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Préstamo Pendiente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 40px;
+    }
+    form {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label { display:block; margin-top:10px; }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 15px;
+      background: #007bff;
+      border: none;
+      padding: 10px;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Editar Préstamo Pendiente</h1>
+
+  <form id="formEditar">
+    <label>ID Cliente</label>
+    <input type="number" id="idCliente" readonly>
+
+    <label>Monto Aprobado</label>
+    <input type="number" id="montoAprobado" required>
+
+    <label>Tasa de Interés (%)</label>
+    <input type="number" id="tasaInteres" required>
+
+    <label>Plazo (meses)</label>
+    <input type="number" id="plazo" required>
+
+    <label>Fecha de Aprobación</label>
+    <input type="date" id="fechaAprobacion" required>
+
+    <label>Estado</label>
+    <select id="estado">
+      <option value="Pendiente">Pendiente</option>
+      <option value="Activo">Activo</option>
+      <option value="Pagado">Pagado</option>
+    </select>
+
+    <button type="submit">Guardar Cambios</button>
+    <a href="Prestamos.html" class="volver">Prestamos</a>
+  </form>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const API_URL = `http://localhost:3000/api/prestamos/${id}`;
+
+    async function cargarDatos() {
+      const res = await fetch(API_URL);
+      const p = await res.json();
+      document.querySelector("#idCliente").value = p.idCliente;
+      document.querySelector("#montoAprobado").value = p.montoAprobado;
+      document.querySelector("#tasaInteres").value = p.tasaInteres;
+      document.querySelector("#plazo").value = p.plazo;
+      document.querySelector("#fechaAprobacion").value = p.fechaAprobacion.split("T")[0];
+      document.querySelector("#estado").value = p.estado;
+    }
+
+    document.querySelector("#formEditar").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const actualizado = {
+        montoAprobado: document.querySelector("#montoAprobado").value,
+        tasaInteres: document.querySelector("#tasaInteres").value,
+        plazo: document.querySelector("#plazo").value,
+        fechaAprobacion: document.querySelector("#fechaAprobacion").value,
+        estado: document.querySelector("#estado").value
+      };
+
+      const res = await fetch(API_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(actualizado)
+      });
+
+      if (res.ok) {
+        alert("Préstamo actualizado correctamente");
+        window.location.href = "prestamos.html";
+      } else {
+        alert("Error al actualizar préstamo");
+      }
+    });
+
+    cargarDatos();
+  </script>
+</body>
+</html>

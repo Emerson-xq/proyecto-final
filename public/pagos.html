@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pagos del Préstamo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f6fa;
+      margin: 0;
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    td {
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background-color: #f1f5ff;
+      transition: background 0.2s ease;
+    }
+
+    .volver {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 18px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .volver:hover {
+      background-color: #0056b3;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+      color: #666;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pagos del Préstamo</h1>
+
+    <table id="tablaPagos">
+      <thead>
+        <tr>
+          <th>ID Pago</th>
+          <th>Fecha Emisión</th>
+          <th>Fecha Vencimiento</th>
+          <th>Monto (S/)</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5" class="no-data">Cargando pagos...</td></tr>
+      </tbody>
+    </table>
+
+    <a href="Prestamos.html" class="volver">← Volver a Préstamos</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const idPrestamo = params.get("idPrestamo");
+    const API_URL = `http://localhost:3000/api/pagos/${idPrestamo}`;
+
+    async function cargarPagos() {
+      try {
+        const res = await fetch(API_URL);
+        const pagos = await res.json();
+
+        const tbody = document.querySelector("#tablaPagos tbody");
+        tbody.innerHTML = "";
+
+        if (pagos.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="no-data">No hay pagos registrados para este préstamo</td></tr>`;
+          return;
+        }
+
+        pagos.forEach(p => {
+          const fila = `
+            <tr>
+              <td>${p.idPago}</td>
+              <td>${p.fechaEmision || '-'}</td>
+              <td>${p.fechaVencimiento || '-'}</td>
+              <td>S/${Number(p.monto).toFixed(2)}</td>
+              <td>${p.estado || 'Sin estado'}</td>
+            </tr>
+          `;
+          tbody.innerHTML += fila;
+        });
+      } catch (error) {
+        console.error("Error al cargar pagos:", error);
+        document.querySelector("#tablaPagos tbody").innerHTML =
+          `<tr><td colspan="5" class="no-data">Error al cargar pagos</td></tr>`;
+      }
+    }
+
+    cargarPagos();
+  </script>
+</body>
+</html>

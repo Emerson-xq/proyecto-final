@@ -1,7 +1,27 @@
 {
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mysql2": "^3.15.3"
-  }
+  },
+  "name": "prestamos-pymes",
+  "version": "1.0.0",
+  "description": "Esta aplicación permite gestionar préstamos de clientes de pequeñas y medianas empresas (PYMES).  \r Se pueden registrar clientes, préstamos, letras de cambio y pagos, con la posibilidad de ver un historial completo y controlar el estado de cada préstamo.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emerson-xq/proyecto-final.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Emerson-xq/proyecto-final/issues"
+  },
+  "homepage": "https://github.com/Emerson-xq/proyecto-final#readme"
 }
